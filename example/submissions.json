@@ -1,0 +1,53 @@
+{
+    "status": "SUCCESS",
+    "loggedInUserId": 3060909,
+    "loggedInUserScreenName": "timothy.marriott",
+    "items": [
+        {
+            "entityType": "CalendarItem",
+            "entityId": 5650251551,
+            "name": "Submission - Casa di Moda - Poster",
+            "repeat": "",
+            "description": "Submit your final fashion brand poster here.",
+            "startTime": 1718688600000,
+            "endTime": 1718688600000,
+            "type": "DEADLINE",
+            "owner": {
+                "entityType": "DomainSchoolClass",
+                "entityId": 5061265230,
+                "subtype": "Provisioned Class",
+                "name": "ITALIAN",
+                "status": "Started",
+                "started": true,
+                "active": true,
+                "locked": false,
+                "finished": false,
+                "archived": false,
+                "code": "9ITAA_1",
+                "externalRef": "4955652650"
+            },
+            "submission": {
+                "entityType": "ClassSubmission",
+                "entityId": 5650251546,
+                "name": "Casa di Moda - Poster",
+                "description": "Submit your final fashion brand poster here.",
+                "createDate": 1718685569986,
+                "dueDate": 1718688600000,
+                "state": {
+                    "status": "OPEN",
+                    "display": "Open"
+                },
+                "ownerRefType": "DomainSchoolClass",
+                "resubmitAllowed": true,
+                "available": true,
+                "draft": false,
+                "published": true,
+                "removed": false,
+                "deleted": false
+            }
+        }
+    ],
+    "itemsStart": 0,
+    "itemsRange": 1,
+    "itemsTotal": 1
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="../scripts/popup.js"></script>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="sticky">
+      <div class="container-userheader">
+        <div id="image-usericon-bg">
+          <img id="image-usericon" src="" alt="user icon">
+        </div>
+        
+        <p id="label-username">Cookies </p>
+      </div>
+
+      <div class="container-header-buttons">
+        <button class="button-header-selected" id="button-header-home">Home</button>
+        <button class="button-header" id="button-header-timetable">Timetable</button>
+        <button class="button-header" id="button-header-marks">Marks</button>
+        <button class="button-header" id="button-header-settings">Settings</button>
+      </div>
+      
+    </div>
+    <div class="content">
+
+      <div id="page-home" class="page">
+
+        <div id="container-notices">
+          <h1>Latest Notice</h1>
+          <h3 id="home-latestnotice-name">Notice Name</h3>
+          <h4 id="home-latestnotice-class">Notice class</h4>
+          <p id="home-latestnotice-date">Notice date</p>
+        </div>
+
+        <div id="container-submissions">
+          <h1>Latest Notice</h1>
+          <h3 id="home-latestsubmission-name">Notice Name</h3>
+          <h4 id="home-latestsubmission-class">Notice class</h4>
+          <p id="home-latestsubmission-date">Notice date</p>
+          <p id="home-latestsubmission-time">Notice time</p>
+        </div>
+
+        <button id="button-whoami">Who Am I</button>
+        <button id="button-submissions">Submissions</button>
+        <input type="text" id="input-request">
+        <button id="button-requsetsubmit">Submit</button>
+        <p id="label-response"></p>
+        <div id="container-submissions">
+
+        </div>
+        <div id="container-classlist">
+
+        </div>
+
+      </div>
+
+      <div id="page-marks" class="page hidden">
+        <p id="label-marks-loading" class="hidden">Loading...</p>
+        <div id="container-classmarks">
+          
+        </div>
+
+      </div>
+      
+      
+    </div>
+    
+  </body>
+</html>

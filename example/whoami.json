@@ -1,0 +1,55 @@
+{
+    "status": "SUCCESS",
+    "loggedInUserId": 3060909,
+    "loggedInUserScreenName": "timothy.marriott",
+    "items": [
+        {
+            "entityType": "DomainConnectUser",
+            "entityId": 3060909,
+            "extras": {
+                "schools": [
+                    {
+                        "entityType": "DomainOrganisationUnit",
+                        "entityId": 3114848,
+                        "extras": {
+                            "currentUser": true
+                        },
+                        "code": 5216,
+                        "subtype": "DomainSchool",
+                        "name": "Inglewood Primary School",
+                        "shortName": "Inglewood PS"
+                    },
+                    {
+                        "entityType": "DomainOrganisationUnit",
+                        "entityId": 3094641,
+                        "extras": {
+                            "currentUser": true
+                        },
+                        "code": 4038,
+                        "subtype": "DomainSchool",
+                        "name": "Mt Lawley Senior High School",
+                        "shortName": "Mt Lawley SHS"
+                    }
+                ]
+            },
+            "subtype": "Student",
+            "name": "Timothy Marriott",
+            "firstName": "Timothy",
+            "lastName": "Marriott",
+            "fullName": "Timothy Marriott",
+            "primaryRole": {
+                "label": "Student",
+                "id": "STUDENT"
+            },
+            "emailAddress": "timothy.marriott@student.education.wa.edu.au",
+            "emailValid": true,
+            "avatarUrl": "/connectapi/files/TlvVcQjxMXBuBAiM22TIWdLcCixkDHjhPtWhYEOMTi9o_3D/HandheldBlurringLightTrails_Q99.jpeg",
+            "screenName": "timothy.marriott",
+            "filtered": false,
+            "mobileStatus": "CURRENT"
+        }
+    ],
+    "itemsStart": 0,
+    "itemsRange": 1,
+    "itemsTotal": 1
+}

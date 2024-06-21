@@ -1,0 +1,24 @@
+{
+  "name": "Extended Connect",
+  "description": "Mods connect",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": "logo-connect-colour.png"
+  },
+  "permissions": [
+    "cookies",
+    "activeTab",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "content_scripts": [
+   {
+     "matches": ["https://connect.det.wa.edu.au/*"],
+     "js": ["scripts/content.js"]
+   }
+ ]
+}

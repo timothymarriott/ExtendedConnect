@@ -1,0 +1,95 @@
+{
+    "status": "SUCCESS",
+    "loggedInUserId": 3060909,
+    "loggedInUserScreenName": "timothy.marriott",
+    "items": [
+        {
+            "id": 5061264714,
+            "name": "9CompB - Programming Technologies S1 Hazelgrove 2024",
+            "code": "9COMPB_1",
+            "total": 135,
+            "flexibleClass": false,
+            "community": false,
+            "space": false,
+            "results": [
+                {
+                    "category": "LEARNINGCONTENT",
+                    "icon": "",
+                    "creates": 2,
+                    "views": 42,
+                    "contributions": 0,
+                    "total": 44,
+                    "createsLabel": "Added",
+                    "categoryLabel": "Learning Content",
+                    "displayByDefault": true,
+                    "appliesToStudents": true,
+                    "appliesToTeachers": true,
+                    "appliesToParents": false
+                },
+                {
+                    "category": "LIBRARY",
+                    "icon": "",
+                    "creates": 0,
+                    "views": 2,
+                    "contributions": 0,
+                    "total": 2,
+                    "createsLabel": "Added",
+                    "contributionsLabel": "Downloads",
+                    "categoryLabel": "Library",
+                    "displayByDefault": true,
+                    "appliesToStudents": true,
+                    "appliesToTeachers": true,
+                    "appliesToParents": true
+                },
+                {
+                    "category": "SUBMISSION",
+                    "icon": "",
+                    "creates": 0,
+                    "views": 6,
+                    "contributions": 0,
+                    "total": 6,
+                    "createsLabel": "Created",
+                    "contributionsLabel": "Uploads/Comments",
+                    "categoryLabel": "Submissions",
+                    "displayByDefault": true,
+                    "appliesToStudents": true,
+                    "appliesToTeachers": true,
+                    "appliesToParents": false
+                },
+                {
+                    "category": "NOTICE",
+                    "icon": "",
+                    "creates": 0,
+                    "views": 6,
+                    "contributions": 0,
+                    "total": 6,
+                    "createsLabel": "Created",
+                    "contributionsLabel": "Comments",
+                    "categoryLabel": "Notices",
+                    "displayByDefault": true,
+                    "appliesToStudents": true,
+                    "appliesToTeachers": true,
+                    "appliesToParents": true
+                },
+                {
+                    "category": "DISCUSSION",
+                    "icon": "",
+                    "creates": 1,
+                    "views": 66,
+                    "contributions": 10,
+                    "total": 77,
+                    "createsLabel": "Created",
+                    "contributionsLabel": "Comments",
+                    "categoryLabel": "Discussions",
+                    "displayByDefault": true,
+                    "appliesToStudents": true,
+                    "appliesToTeachers": true,
+                    "appliesToParents": true
+                }
+            ]
+        }
+    ],
+    "itemsStart": 0,
+    "itemsRange": 1,
+    "itemsTotal": 1
+}
