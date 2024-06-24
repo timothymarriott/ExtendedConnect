@@ -3,15 +3,16 @@
   <head>
     <script src="../scripts/popup.js"></script>
     <link rel="stylesheet" href="styles.css">
+
   </head>
   <body>
     <div class="sticky">
       <div class="container-userheader">
         <div id="image-usericon-bg">
-          <img id="image-usericon" src="" alt="user icon">
+          <img id="image-usericon" src="../assets/circle-exclamation-solid.svg" alt="user icon">
         </div>
         
-        <p id="label-username">Cookies </p>
+        <p id="label-username" class="invalidusername">NO SESSION</p>
       </div>
 
       <div class="container-header-buttons">
@@ -25,38 +26,45 @@
     <div class="content">
 
       <div id="page-home" class="page">
+        <div id="page-home-main">
 
-        <div id="container-notices">
-          <h1>Latest Notice</h1>
-          <h3 id="home-latestnotice-name">Notice Name</h3>
-          <h4 id="home-latestnotice-class">Notice class</h4>
-          <p id="home-latestnotice-date">Notice date</p>
+          <div id="container-submissions" class="container container-notlast">
+            <div class="container-header">
+              <p class="label-container-header">Next Submission</p>
+              <button id="button-submissions-more" class="button-container-header hidden">More</button>
+            </div>
+  
+            <div id="container-nextsubmission-none" class="hidden" style="text-align: center;">
+              <p id="home-nextsubmission-none">You currently don't have any submissions due</p>
+            </div>
+  
+            <div id="container-nextsubmission-loading">
+              <p id="home-loading-label" style="align-self: center;"><img src="../assets/loading-indicator.gif" alt=""></p>
+            </div>
+          </div>
+
+          <div id="container-notices" class="container">
+            <div class="container-header">
+              <p class="label-container-header">Latest Notice</p>
+              <input id="input-notices-search" class="hidden" type="text" placeholder="Search...">
+              <button id="button-notices-more" class="button-container-header hidden">More</button>
+            </div>
+            
+  
+            <div id="container-notices-loading" style="text-align: center;">
+              <p id="home-loading-label" style="align-self: center;"><img src="../assets/loading-indicator.gif" alt=""></p>
+            </div>
+  
+            
+          </div>
+        
         </div>
-
-        <div id="container-submissions">
-          <h1>Latest Notice</h1>
-          <h3 id="home-latestsubmission-name">Notice Name</h3>
-          <h4 id="home-latestsubmission-class">Notice class</h4>
-          <p id="home-latestsubmission-date">Notice date</p>
-          <p id="home-latestsubmission-time">Notice time</p>
-        </div>
-
-        <button id="button-whoami">Who Am I</button>
-        <button id="button-submissions">Submissions</button>
-        <input type="text" id="input-request">
-        <button id="button-requsetsubmit">Submit</button>
-        <p id="label-response"></p>
-        <div id="container-submissions">
-
-        </div>
-        <div id="container-classlist">
-
-        </div>
+        
 
       </div>
 
       <div id="page-marks" class="page hidden">
-        <p id="label-marks-loading" class="hidden">Loading...</p>
+        <p id="label-marks-loading" class="hidden"><img src="../assets/loading-indicator.gif" alt=""></p>
         <div id="container-classmarks">
           
         </div>

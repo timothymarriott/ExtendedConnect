@@ -1,14 +1,70 @@
 
 var connectcookie = "";
 
+var createdNotices = [];
+var createdSubmissions = [];
+
+var ShowOnlyLatestNotice = true;
+var ShowOnlyNextSubmission = true;
+
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('button-whoami').addEventListener('click', () => makeManualRequest(whoami));
-    document.getElementById('button-submissions').addEventListener('click', () => makeManualRequest(NextSubmissions));
-    document.getElementById('button-requsetsubmit').addEventListener('click', () => manualrequest(document.getElementById("input-request").value));
     
     document.getElementById('button-header-marks').addEventListener('click', () => GoToPage("marks"));
     document.getElementById('button-header-home').addEventListener('click', () => GoToPage("home"));
-    
+    document.getElementById('button-notices-more').addEventListener('click', () => {
+        if(createdNotices.length == 0) return; 
+        if (ShowOnlyLatestNotice){
+            ShowOnlyLatestNotice = false;
+
+            document.getElementById('button-notices-more').textContent = "Less";
+
+            document.getElementById("input-notices-search").classList.remove("hidden");
+
+            for(let notice of createdNotices){
+                notice.element.classList.remove("hidden");
+            }
+
+        } else {
+            ShowOnlyLatestNotice = true;
+
+            document.getElementById('button-notices-more').textContent = "More";
+
+            for(let notice of createdNotices){
+                notice.element.classList.add("hidden");
+            }
+            createdNotices[0].element.classList.remove("hidden");
+            document.getElementById("input-notices-search").classList.add("hidden");
+        }
+    });
+
+    document.getElementById('button-submissions-more').addEventListener('click', () => {
+        if(createdSubmissions.length == 0) return; 
+        if (ShowOnlyNextSubmission){
+            
+            ShowOnlyNextSubmission = false;
+
+            document.getElementById('button-submissions-more').textContent = "Less";
+
+            for(let notice of createdSubmissions){
+                notice.element.classList.remove("hidden");
+            }
+
+        } else {
+            ShowOnlyNextSubmission = true;
+
+            document.getElementById('button-submissions-more').textContent = "More";
+
+            for(let notice of createdSubmissions){
+                notice.element.classList.add("hidden");
+            }
+            createdSubmissions[0].element.classList.remove("hidden");
+        }
+    });
+
+    document.getElementById("input-notices-search").addEventListener("keyup", () => {
+        SearchNotices();
+    })
+
     OnLoad();
 });
 
@@ -34,9 +90,9 @@ async function OnLoad(){
     await GetCookies();
     whoami();
     GetIcon();
-    NextSubmissions();
     Attendence(0);
     Feed();
+    NextSubmissions();
     GetUser(2547313);
     GetClasses();
 
@@ -50,10 +106,24 @@ async function OnLoad(){
 async function GetMarks(){
 
     document.getElementById("label-marks-loading").classList.remove("hidden");
+
+    const classMarkContainer = document.getElementById("container-classmarks");
+
+    while (classMarkContainer.firstChild) {
+        classMarkContainer.removeChild(classMarkContainer.firstChild);
+    }
     
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
                 
-        chrome.tabs.sendMessage(tabs[0].id, {type: "GetMarks"});
+        if (!tabs[0].url.includes("https://connect.det.wa.edu.au")){
+            chrome.tabs.create({
+                url: "https://connect.det.wa.edu.au"
+            });
+        } else {
+            chrome.tabs.sendMessage(tabs[0].id, {type: "GetMarks"});
+        }
+
+        
 
         
         
@@ -125,9 +195,14 @@ async function manualrequest(url){
 async function whoami(){
     var response = await request("https://connect.det.wa.edu.au/connectapi/rest/api/v1/basic/whoami");
     
+    if (response.status === "SUCCESS"){
+        let usernamelabel = document.getElementById("label-username");
+        usernamelabel.textContent = response.items[0].name;
+        usernamelabel.classList.remove("invalidusername");
+        usernamelabel.classList.add("validusername");
+    }
 
-    let usernamelabel = document.getElementById("label-username");
-    usernamelabel.textContent = response.items[0].name;
+    
 
     
 
@@ -151,37 +226,112 @@ async function VisitClass(id){
     });
 }
 
+async function VisitNotice(classid, notice){
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+                
+        chrome.tabs.sendMessage(tabs[0].id, {type: "VIST_URL", data: "/group/students/ui/class/announcements?coisp=DomainSchoolClass:" + classid + "&viewNotice=" + notice}, );
+        
+    });
+}
+
+async function VisitSubmission(classid, submission){
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+                
+        chrome.tabs.sendMessage(tabs[0].id, {type: "VIST_URL", data: "/group/students/ui/class/submissions?coisp=DomainSchoolClass:" + classid + "&viewSubmission=" + submission}, );
+        
+    });
+}
+
 async function NextSubmissions(){
     
     var response = await request("https://connect.det.wa.edu.au/connectapi/rest/api/v1/app/calendar/next_submissions");
     let submissioncontainer = document.getElementById("container-submissions");
 
-    while (submissioncontainer.firstChild) {
-        submissioncontainer.removeChild(submissioncontainer.firstChild);
-    }
+    
+    document.getElementById("container-nextsubmission-loading").classList.add("hidden");
+    document.getElementById("container-nextsubmission-none").classList.add("hidden");
 
-    for (let submission of response.items){
-        let submissionlink = document.createElement("button");
-        console.log("Making link to: " + "/group/students/ui/class/submissions?coisp=DomainSchoolClass:" + submission.owner.entityId)
-        submissionlink.addEventListener('click', () => {
-            chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-                
-                chrome.tabs.sendMessage(tabs[0].id, {type: "VIST_URL", data: "/group/students/ui/class/submissions?coisp=DomainSchoolClass:" + submission.owner.entityId + "&viewSubmission=" + submission.submission.entityId}, );
-                console.log("Sending visit request to ", tabs[0].id);
+    if (response.items.length > 0){
+        document.getElementById("button-submissions-more").classList.remove("hidden");
+        for (let submission of response.items){
+            const submissionsInfoContainer = document.createElement("div");
+            submissionsInfoContainer.classList.add("container-notices-info");
+            submissionsInfoContainer.classList.add("hidden");
+            
+            
+
+            const submissionName = document.createElement("p");
+            submissionName.classList.add("home-notices-name");
+            submissionName.textContent = submission.name;
+            submissionName.addEventListener("click", () => {
+                VisitSubmission(submission.owner.entityId, submission.submission.entityId);
             });
-        });
-        submissionlink.textContent = submission.name;
-        submissioncontainer.appendChild(submissionlink);
+
+            const submissionClass = document.createElement("p");
+            submissionClass.classList.add("home-notices-class");
+            submissionClass.textContent = submission.owner.name;
+            submissionClass.addEventListener("click", () => {
+                VisitClass(submission.owner.entityId);
+            })
+
+            const submissionInfo = document.createElement("p");
+            submissionInfo.classList.add("home-notices-info");
+            const date = new Date(submission.submission.dueDate);
+            if (isPastDate(date)){
+                submissionInfo.textContent = "CLOSED"
+            } else {
+                submissionInfo.textContent = timeUntil(date);
+            }
+
+            setInterval(() => {
+                UpdateSubmissionTime(submission, submissionsInfoContainer);
+            }, 100);
+
+            submissionsInfoContainer.appendChild(submissionName);
+            submissionsInfoContainer.appendChild(submissionInfo);
+            submissionsInfoContainer.appendChild(submissionClass);
+            document.getElementById("container-submissions").appendChild(submissionsInfoContainer);
+        
+            createdSubmissions.push({name: submission.name, element: submissionsInfoContainer});
+        }
+
+        createdSubmissions[0].element.classList.remove("hidden");
+
+
+        
+        
+    } else {
+        document.getElementById("container-nextsubmission-none").classList.remove("hidden");
+        document.getElementById("button-submissions-more").classList.add("hidden");
     }
 
     
 
 }
 
+function SearchNotices(){
+
+    const query = document.getElementById("input-notices-search").value;
+
+    for (let notice of createdNotices){
+        if (notice.name.includes(query)){
+            notice.element.classList.remove("hidden");
+        } else {
+            notice.element.classList.add("hidden");
+        }
+    }
+
+}
+
 async function GetIcon(){
     var response = await request("https://connect.det.wa.edu.au/connectapi/rest/api/v1/app/profile/avatar/getIcon");
     var usericon = document.getElementById("image-usericon");
-    usericon.src = "https://connect.det.wa.edu.au/" + response.items[0].fullImageUrl;
+    if (response.status == "SUCCESS"){
+        usericon.src = "https://connect.det.wa.edu.au/" + response.items[0].fullImageUrl;
+    } else {
+        usericon.src = "../assets/circle-exclamation-solid.svg"
+    }
+    
 }
 
 async function MyTeachers(){
@@ -217,8 +367,64 @@ async function GetClasses(){
     }
 }
 
+function isPastDate(date) {
+    const now = new Date();
+    const targetDate = new Date(date);
+    return targetDate < now;
+  }
+
+function timeAgo(date) {
+    const now = new Date();
+    const past = new Date(date);
+    const difference = now - past;
+  
+    const seconds = Math.floor(difference / 1000);
+    const minutes = Math.floor(difference / (1000 * 60));
+    const hours = Math.floor(difference / (1000 * 60 * 60));
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const weeks = Math.floor(difference / (1000 * 60 * 60 * 24 * 7));
+    const months = Math.floor(difference / (1000 * 60 * 60 * 24 * 30.44)); // Approximate month length
+    const years = Math.floor(difference / (1000 * 60 * 60 * 24 * 365.25)); // Approximate year length
+  
+    if (years > 0) return `${years} year(s) ago`;
+    if (months > 0) return `${months} month(s) ago`;
+    if (weeks > 0) return `${weeks} week(s) ago`;
+    if (days > 0) return `${days} day(s) ago`;
+    if (hours > 0) return `${hours} hour(s) ago`;
+    if (minutes > 0) return `${minutes} minute(s) ago`;
+    return `${seconds} second(s) ago`;
+}
+
+function timeUntil(date) {
+    const now = new Date();
+    const future = new Date(date);
+    const difference = future - now;
+  
+    if (difference < 0) return "The date is in the past";
+  
+    const seconds = Math.floor(difference / 1000);
+    const minutes = Math.floor(difference / (1000 * 60));
+    const hours = Math.floor(difference / (1000 * 60 * 60));
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const weeks = Math.floor(difference / (1000 * 60 * 60 * 24 * 7));
+    const months = Math.floor(difference / (1000 * 60 * 60 * 24 * 30.44)); // Approximate month length
+    const years = Math.floor(difference / (1000 * 60 * 60 * 24 * 365.25)); // Approximate year length
+  
+    if (years > 0) return `${years} year(s) from now`;
+    if (months > 0) return `${months} month(s) from now`;
+    if (weeks > 0) return `${weeks} week(s) from now`;
+    if (days > 0) return `${days} day(s) from now`;
+    if (hours > 0) return `${hours} hour(s) from now`;
+    if (minutes > 0) return `${minutes} minute(s) from now`;
+    return `${seconds} second(s) from now`;
+  }
+
 async function Feed(){
+    const noticeLoadingContainer = document.getElementById("container-notices-loading");
+
+
     var response = await request("https://connect.det.wa.edu.au/connectapi/rest/api/v1/stream/list?channel=ALL&itemTypeFilter=EVERYTHING&eventTypeFilter=ALL&start=0&range=128&stats=true&follow=true&perms=true&attachments=true&imageGallery=true&audience=true");
+    
     var discussionCount = 0;
     var noticeCount = 0;
     var totalViews = 0;
@@ -240,17 +446,65 @@ async function Feed(){
         }
     }
 
+    for (const notice of notices) {
+        const noticeInfoContainer = document.createElement("div");
+        noticeInfoContainer.classList.add("container-notices-info");
+        noticeInfoContainer.classList.add("hidden");
 
-    const noticeName = document.getElementById("home-latestnotice-name");
-    noticeName.textContent = notices[0].notice.title;
 
-    const noticeClass = document.getElementById("home-latestnotice-class");
-    noticeClass.textContent = notices[0].owner.name;
+        const noticeName = document.createElement("p");
+        noticeName.classList.add("home-notices-name");
+        noticeName.textContent = notice.notice.title;
+        noticeName.addEventListener("click", () => {
+            VisitNotice(notice.owner.entityId, notice.notice.id);
+        })
+        
+        const noticeClass = document.createElement("p");
+        noticeClass.classList.add("home-notices-class");
+        noticeClass.textContent = notice.owner.name;
+        noticeClass.addEventListener("click", () => {
+            VisitClass(notice.owner.entityId);
+        })
+        
+        const noticeInfo = document.createElement("p");
+        noticeInfo.classList.add("home-notices-info");
+        const date = new Date(notice.notice.createdDate);
+        noticeInfo.textContent = notice.notice.publishedBy.name + " - " + timeAgo(date);
+        
+        setInterval(() => {
+            UpdateNoticeTime(notice.notice, noticeInfo);
+        }, 100);
+        
+        noticeInfoContainer.appendChild(noticeName);
+        noticeInfoContainer.appendChild(noticeInfo);
+        noticeInfoContainer.appendChild(noticeClass);
+        document.getElementById("container-notices").appendChild(noticeInfoContainer);
 
-    const noticeDate = document.getElementById("home-latestnotice-date");
-    noticeDate.textContent = notices[0].notice.createdDate;
+        createdNotices.push({ name: notice.notice.title, element:noticeInfoContainer });
+    }
+
+    createdNotices[0].element.classList.remove("hidden");
+
+    document.getElementById("button-notices-more").classList.remove("hidden");
+
+    noticeLoadingContainer.classList.add("hidden");
     
     console.log("Found", response.items.length, "feed items.",noticeCount,"notices and",discussionCount,"discussions. With a total of",totalViews,"views and",totalComments,"comments.")
+}
+
+function UpdateNoticeTime(notice, noticeInfo){
+    const date = new Date(notice.createdDate);
+    noticeInfo.textContent = notice.publishedBy.name + " - " + timeAgo(date);
+}
+
+function UpdateSubmissionTime(submission, submissionInfo){
+    
+    const date = new Date(submission.submission.dueDate);
+    if (isPastDate(date)){
+        submissionInfo.textContent = "CLOSED"
+    } else {
+        submissionInfo.textContent = timeUntil(date);
+    }
 }
 
 async function GetUser(user){
@@ -306,6 +560,13 @@ async function GetCookies(){
         
         if (localStorage.getItem("connect_cookie") != null){
             connectcookie = localStorage.getItem("connect_cookie");
+
+            const whoami = await request("https://connect.det.wa.edu.au/connectapi/rest/api/v1/basic/whoami");
+            if (whoami.status != "SUCCESS"){
+                localStorage.removeItem("connect_cookie");
+                await GetCookies();
+            }
+
         } else {
             const response = await new Promise((resolve, reject) => {
                 chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {

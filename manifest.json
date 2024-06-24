@@ -5,7 +5,13 @@
   "manifest_version": 3,
   "action": {
     "default_popup": "popup/popup.html",
-    "default_icon": "logo-connect-colour.png"
+    "default_icon": "assets/logo-connect-colour.png"
+  },
+  "icons": {
+    "16": "assets/icon/logo-connect-colour-X16.png",
+    "32": "assets/icon/logo-connect-colour-X32.png",
+    "48": "assets/icon/logo-connect-colour-X48.png",
+    "128": "assets/icon/logo-connect-colour-X128.png"
   },
   "permissions": [
     "cookies",

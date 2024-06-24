@@ -22,46 +22,51 @@ async function navigateTo(url) {
 
 async function GetMarks(){
     const frame = document.createElement("iframe");
+    document.body.appendChild(frame);
     console.log(frame);
     frame.src = "https://connect.det.wa.edu.au/group/students/ui/my-settings/assessment-outlines"
     
 
-    frame.style = "visibility: hidden; width:0; height:0;";
+    frame.style = "visibility: hidden; width:0; height:0; position: absolute;";
     
+    GetMarksFromFrame(frame);
+}
 
-    
+async function GetMarksFromFrame(frame){
+    if (frame.contentWindow.document == null){
+        setTimeout(() => {
 
-    setTimeout(() => {
-        const markscontainer = frame.contentWindow.document.querySelector("#v-studentassessmentoutlineportlet_WAR_connectrvportlet_INSTANCE_RpxlkUYQqwjo_LAYOUT_233 > div > div.v-csslayout.v-layout.v-widget > div.v-csslayout.v-layout.v-widget.cvr-u-padding--md.v-csslayout-cvr-u-padding--md.eds-s-is-last.v-csslayout-eds-s-is-last > div > div > div.v-csslayout.v-layout.v-widget.eds-s-is-first.v-csslayout-eds-s-is-first.cvr-u-margin-bottom--xs.v-csslayout-cvr-u-margin-bottom--xs");
-        var subjects = [];
-        if (markscontainer == null){
-            console.log("Error: No marks container");
-            return;
-        }
-        for(let subject of markscontainer.childNodes){
-            const markContainer = subject.firstChild.childNodes[1].firstChild.childNodes[2];
-            if (markContainer.childNodes.length > 0){
-                console.log(markContainer);
-                var mark = markContainer.firstChild.childNodes[2].firstChild.firstChild.firstChild.firstChild.textContent;
-                subjects.push({class:subject.firstChild.firstChild.firstChild.textContent,mark:mark});
-            }
-            
-        }
-
-        chrome.runtime.sendMessage({
-            type:"Marks",
-            data:subjects
-        })
-
-        document.body.removeChild(frame);
-    
+            GetMarksFromFrame(frame);
         
-    }, 4000);
+        }, 100);
+        return;
+    }
+    const markscontainer = frame.contentWindow.document.querySelector("#v-studentassessmentoutlineportlet_WAR_connectrvportlet_INSTANCE_RpxlkUYQqwjo_LAYOUT_233 > div > div.v-csslayout.v-layout.v-widget > div.v-csslayout.v-layout.v-widget.cvr-u-padding--md.v-csslayout-cvr-u-padding--md.eds-s-is-last.v-csslayout-eds-s-is-last > div > div > div.v-csslayout.v-layout.v-widget.eds-s-is-first.v-csslayout-eds-s-is-first.cvr-u-margin-bottom--xs.v-csslayout-cvr-u-margin-bottom--xs");
+    var subjects = [];
+    if (markscontainer == null){
+        setTimeout(() => {
 
-    
+            GetMarksFromFrame(frame);
+        
+        }, 100);
+        return;
+    }
+    for(let subject of markscontainer.childNodes){
+        const markContainer = subject.firstChild.childNodes[1].firstChild.childNodes[2];
+        if (markContainer.childNodes.length > 0){
+            console.log(markContainer);
+            var mark = markContainer.firstChild.childNodes[2].firstChild.firstChild.firstChild.firstChild.textContent;
+            subjects.push({class:subject.firstChild.firstChild.firstChild.textContent,mark:mark});
+        }
+        
+    }
 
-    
-    
+    chrome.runtime.sendMessage({
+        type:"Marks",
+        data:subjects
+    })
+
+    document.body.removeChild(frame);
 }
 
 const navigateToStore = sessionStorage.getItem('navigateTo');
