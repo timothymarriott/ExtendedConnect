@@ -1,17 +1,10 @@
 {
-  "name": "Extended Connect",
-  "description": "Mods connect",
+  "name": "Nut Buster",
+  "description": "",
   "version": "1.0",
   "manifest_version": 3,
   "action": {
-    "default_popup": "popup/popup.html",
-    "default_icon": "assets/logo-connect-colour.png"
-  },
-  "icons": {
-    "16": "assets/icon/logo-connect-colour-X16.png",
-    "32": "assets/icon/logo-connect-colour-X32.png",
-    "48": "assets/icon/logo-connect-colour-X48.png",
-    "128": "assets/icon/logo-connect-colour-X128.png"
+    "default_popup": "popup/popup.html"
   },
   "permissions": [
     "cookies",
@@ -23,8 +16,14 @@
   },
   "content_scripts": [
    {
-     "matches": ["https://connect.det.wa.edu.au/*"],
+     "matches": ["https://asia.languagenut.com/*"],
      "js": ["scripts/content.js"]
    }
- ]
+ ],
+ "web_accessible_resources": [
+    {
+      "resources": ["scripts/inject.js"],
+      "matches": ["https://asia.languagenut.com/*"]
+    }
+  ]
 }
